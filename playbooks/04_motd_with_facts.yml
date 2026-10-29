@@ -1,0 +1,23 @@
+---
+- name: Configure MOTD using Ansible facts
+  hosts: localhost
+  connection: local
+  become: true
+  gather_facts: true
+
+  vars:
+    motd_message: |
+      Welcome to the DevOps training lab!
+      Hostname: {{ ansible_facts['hostname'] }}
+      IP address: {{ ansible_facts['default_ipv4']['address'] }}
+
+      Have a great day, System Administrator!
+
+  tasks:
+    - name: Set MOTD with hostname and IP address
+      ansible.builtin.copy:
+        content: "{{ motd_message }}"
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: "0644"

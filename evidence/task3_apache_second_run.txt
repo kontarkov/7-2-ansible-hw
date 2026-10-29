@@ -1,0 +1,29 @@
+
+PLAY [Install Apache and publish system information] ***************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [apache_info : Install Apache] ********************************************
+ok: [localhost]
+
+TASK [apache_info : Deploy Apache configuration] *******************************
+ok: [localhost]
+
+TASK [apache_info : Enable Apache configuration] *******************************
+ok: [localhost]
+
+TASK [apache_info : Deploy system information page] ****************************
+ok: [localhost]
+
+TASK [apache_info : Ensure Apache is running and enabled] **********************
+ok: [localhost]
+
+TASK [apache_info : Apply pending Apache configuration changes] ****************
+
+TASK [apache_info : Verify HTTP 200 response] **********************************
+ok: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=7    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

@@ -1,0 +1,20 @@
+---
+- name: Configure system MOTD
+  hosts: localhost
+  connection: local
+  become: true
+  gather_facts: false
+
+  vars:
+    motd_message: |
+      Welcome to the DevOps training lab!
+      Managed by Ansible.
+
+  tasks:
+    - name: Set system MOTD
+      ansible.builtin.copy:
+        content: "{{ motd_message }}"
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: "0644"

@@ -1,0 +1,30 @@
+---
+- name: Download and extract an archive
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    archive_url: "https://github.com/octocat/Hello-World/archive/refs/heads/master.tar.gz"
+    archive_path: "/tmp/ansible-hello-world.tar.gz"
+    extract_dir: "/tmp/ansible-hello-world"
+
+  tasks:
+    - name: Create extraction directory
+      ansible.builtin.file:
+        path: "{{ extract_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Download archive
+      ansible.builtin.get_url:
+        url: "{{ archive_url }}"
+        dest: "{{ archive_path }}"
+        mode: "0644"
+
+    - name: Extract archive
+      ansible.builtin.unarchive:
+        src: "{{ archive_path }}"
+        dest: "{{ extract_dir }}"
+        remote_src: true
+        creates: "{{ extract_dir }}/Hello-World-master"

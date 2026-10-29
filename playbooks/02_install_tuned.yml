@@ -1,0 +1,19 @@
+---
+- name: Install and enable tuned
+  hosts: localhost
+  connection: local
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Install tuned
+      ansible.builtin.apt:
+        name: tuned
+        state: present
+        update_cache: false
+
+    - name: Enable and start tuned
+      ansible.builtin.systemd_service:
+        name: tuned
+        enabled: true
+        state: started

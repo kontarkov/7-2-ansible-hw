@@ -1,0 +1,52 @@
+---
+- name: Install Apache
+  ansible.builtin.apt:
+    name: "{{ apache_package }}"
+    state: present
+    update_cache: true
+  become: true
+
+- name: Deploy Apache configuration
+  ansible.builtin.template:
+    src: apache-info.conf.j2
+    dest: /etc/apache2/conf-available/apache-info.conf
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+  notify: Restart Apache after configuration change
+
+- name: Enable Apache configuration
+  ansible.builtin.file:
+    src: /etc/apache2/conf-available/apache-info.conf
+    dest: /etc/apache2/conf-enabled/apache-info.conf
+    state: link
+  become: true
+  notify: Restart Apache after configuration change
+
+- name: Deploy system information page
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: "{{ apache_document_root }}/index.html"
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+
+- name: Ensure Apache is running and enabled
+  ansible.builtin.systemd_service:
+    name: "{{ apache_service }}"
+    state: started
+    enabled: true
+  become: true
+
+- name: Apply pending Apache configuration changes
+  ansible.builtin.meta: flush_handlers
+
+- name: Verify HTTP 200 response
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:{{ apache_listen_port }}/"
+    status_code: 200
+    return_content: true
+  register: apache_http_result
+  changed_when: false
